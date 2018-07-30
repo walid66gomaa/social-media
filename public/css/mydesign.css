@@ -1,0 +1,65 @@
+/*.mt-4, .my-4 {
+  margin-top: 4.5rem!important;
+}*/
+
+body
+{
+	margin-top: 60px;
+	
+
+	
+
+}
+
+
+
+/* section subscribe*/
+
+.sign-up .modal-dialog 
+{
+/*
+    width: 300px;
+    
+*/
+}
+
+
+
+.sign-up label
+{
+    display: block;
+}
+
+.navbar .dropdown-menu
+{
+    border-top: 3px solid #E41B17;
+    background-color: #343a40!important;;
+    min-width: 200px;
+}
+.navbar .dropdown-menu > li > a
+{
+    color: #FFF;
+    padding: 6px 20px;
+    -webkit-transition: padding 0.5s ease; 
+   
+}
+
+.navbar-right .dropdown-menu{left: 0; right: auto;}
+
+
+.navbar .dropdown-menu  li
+{-webkit-transition: padding 0.5s ease; }
+.navbar .dropdown-menu  li:hover
+
+{
+    color: #FFF;
+    background: #E41B17;
+    padding-left: 10px;
+   
+     
+   
+
+}
+
+
+
