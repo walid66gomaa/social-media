@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -230,9 +231,9 @@ class Router implements RegistrarContract, BindingRegistrar
     /**
      * Create a redirect from one URI to another.
      *
-     * @param string  $uri
-     * @param string  $destination
-     * @param int  $status
+     * @param  string  $uri
+     * @param  string  $destination
+     * @param  int  $status
      * @return \Illuminate\Routing\Route
      */
     public function redirect($uri, $destination, $status = 301)
@@ -305,7 +306,20 @@ class Router implements RegistrarContract, BindingRegistrar
     }
 
     /**
-     * Route an api resource to a controller.
+     * Register an array of API resource controllers.
+     *
+     * @param  array  $resources
+     * @return void
+     */
+    public function apiResources(array $resources)
+    {
+        foreach ($resources as $name => $controller) {
+            $this->apiResource($name, $controller);
+        }
+    }
+
+    /**
+     * Route an API resource to a controller.
      *
      * @param  string  $name
      * @param  string  $controller
@@ -314,8 +328,14 @@ class Router implements RegistrarContract, BindingRegistrar
      */
     public function apiResource($name, $controller, array $options = [])
     {
+        $only = ['index', 'show', 'store', 'update', 'destroy'];
+
+        if (isset($options['except'])) {
+            $only = array_diff($only, (array) $options['except']);
+        }
+
         return $this->resource($name, $controller, array_merge([
-            'only' => ['index', 'show', 'store', 'update', 'destroy'],
+            'only' => $only,
         ], $options));
     }
 
@@ -606,8 +626,8 @@ class Router implements RegistrarContract, BindingRegistrar
     /**
      * Return the response for the given route.
      *
-     * @param  Route  $route
-     * @param  Request  $request
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Routing\Route  $route
      * @return mixed
      */
     protected function runRoute(Request $request, Route $route)
@@ -700,6 +720,8 @@ class Router implements RegistrarContract, BindingRegistrar
 
         if ($response instanceof PsrResponseInterface) {
             $response = (new HttpFoundationFactory)->createResponse($response);
+        } elseif ($response instanceof Model && $response->wasRecentlyCreated) {
+            $response = new JsonResponse($response, 201);
         } elseif (! $response instanceof SymfonyResponse &&
                    ($response instanceof Arrayable ||
                     $response instanceof Jsonable ||

@@ -6,7 +6,6 @@ $('.like').on('click',function () {
     var count_like= document.getElementById(post_id+'Cl');
     var count_dislike= document.getElementById(post_id+'Cd');
     
-    
 	// alert(post_id);
     $.ajax({
         
@@ -35,7 +34,6 @@ $('.like').on('click',function () {
             count_like.innerHTML=parseInt(count_like.innerHTML)-1;
        	}
 
-
         }
         
     });
@@ -46,9 +44,6 @@ $('.dislike').on('click',function () {
 	var post_id=$(this).attr('postId');
 	 var count_dislike= document.getElementById(post_id+'Cd');
 	var count_like= document.getElementById(post_id+'Cl');
-	
-
-	
 	
 	// alert(like_s);
     $.ajax({
@@ -64,7 +59,6 @@ $('.dislike').on('click',function () {
        		$('#'+post_id+'d').removeClass('btn-danger').addClass('btn-secondary');	
             count_dislike.innerHTML=parseInt(count_dislike.innerHTML)-1;
        				
-       
        	}
 
        	if (data.is_like==0) 
@@ -79,9 +73,7 @@ $('.dislike').on('click',function () {
             }
        	}
 
-
         }
         
     });
 });
-

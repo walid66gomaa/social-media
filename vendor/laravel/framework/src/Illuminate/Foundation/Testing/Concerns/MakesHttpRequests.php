@@ -111,6 +111,27 @@ trait MakesHttpRequests
     }
 
     /**
+     * Enable the given middleware for the test.
+     *
+     * @param  string|array  $middleware
+     * @return $this
+     */
+    public function withMiddleware($middleware = null)
+    {
+        if (is_null($middleware)) {
+            unset($this->app['middleware.disable']);
+
+            return $this;
+        }
+
+        foreach ((array) $middleware as $abstract) {
+            unset($this->app[$abstract]);
+        }
+
+        return $this;
+    }
+
+    /**
      * Automatically follow any redirects returned from the response.
      *
      * @return $this
@@ -375,7 +396,7 @@ trait MakesHttpRequests
      */
     protected function formatServerHeaderKey($name)
     {
-        if (! Str::startsWith($name, 'HTTP_') && $name != 'CONTENT_TYPE' && $name != 'REMOTE_ADDR') {
+        if (! Str::startsWith($name, 'HTTP_') && $name !== 'CONTENT_TYPE' && $name !== 'REMOTE_ADDR') {
             return 'HTTP_'.$name;
         }
 

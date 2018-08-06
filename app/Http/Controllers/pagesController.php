@@ -16,9 +16,10 @@ class pagesController extends Controller
 {
      public function Posts()
     { 
-    	$posts=post::orderBy('id', 'DESC')->get();;
+        $posts=post::orderBy('id', 'DESC')->get();
+        $catogries=Category::orderBy('id', 'DESC')->get();
         
-    	return view('content.post',compact('posts'));
+    	return view('content.post',compact('posts','catogries'));
 
 
     }
@@ -194,9 +195,19 @@ class pagesController extends Controller
     { 
        
          
+        
+
         $like_s=$request->like_s;
          $post_id=$request->post_id;
          $change_dislike=0;
+
+        ///////////////////////////
+
+        DB::table('likes')
+        ->where('post_id',$post_id)
+        ->where('user_id',Auth::user()->id)
+        ->update(['like'=>0]);
+        ///////////////
         
         
          $like=DB::table('likes')

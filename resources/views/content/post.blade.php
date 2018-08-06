@@ -30,11 +30,9 @@
                 <input type="text" placeholder="Title" class="form-control input-lg form-group" id="title" name="title">
                
                        <select class="form-control input-lg form-group" name="cat_id">
-                         
-                          <option value="1">php</option>
-                           <option value="2">Web desgn</option>
-                            <option value="3">java script</option>
-                             <option value="4">Html</option>
+                      @foreach($catogries as $catogry)   
+                          <option value="{{ $catogry->id }}">{{ $catogry->name }} </option>
+                        @endforeach
 
                        </select>
                   

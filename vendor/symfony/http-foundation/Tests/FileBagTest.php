@@ -34,14 +34,14 @@ class FileBagTest extends TestCase
     public function testShouldConvertsUploadedFiles()
     {
         $tmpFile = $this->createTempFile();
-        $file = new UploadedFile($tmpFile, basename($tmpFile), 'text/plain', 100, 0);
+        $file = new UploadedFile($tmpFile, basename($tmpFile), 'text/plain');
 
         $bag = new FileBag(array('file' => array(
             'name' => basename($tmpFile),
             'type' => 'text/plain',
             'tmp_name' => $tmpFile,
             'error' => 0,
-            'size' => 100,
+            'size' => null,
         )));
 
         $this->assertEquals($file, $bag->get('file'));
@@ -62,7 +62,7 @@ class FileBagTest extends TestCase
 
     public function testShouldRemoveEmptyUploadedFilesForMultiUpload()
     {
-        $bag = new FileBag(array('file' => array(
+        $bag = new FileBag(array('files' => array(
             'name' => array(''),
             'type' => array(''),
             'tmp_name' => array(''),
@@ -70,13 +70,26 @@ class FileBagTest extends TestCase
             'size' => array(0),
         )));
 
-        $this->assertSame(array(), $bag->get('file'));
+        $this->assertSame(array(), $bag->get('files'));
+    }
+
+    public function testShouldNotRemoveEmptyUploadedFilesForAssociativeArray()
+    {
+        $bag = new FileBag(array('files' => array(
+            'name' => array('file1' => ''),
+            'type' => array('file1' => ''),
+            'tmp_name' => array('file1' => ''),
+            'error' => array('file1' => UPLOAD_ERR_NO_FILE),
+            'size' => array('file1' => 0),
+        )));
+
+        $this->assertSame(array('file1' => null), $bag->get('files'));
     }
 
     public function testShouldConvertUploadedFilesWithPhpBug()
     {
         $tmpFile = $this->createTempFile();
-        $file = new UploadedFile($tmpFile, basename($tmpFile), 'text/plain', 100, 0);
+        $file = new UploadedFile($tmpFile, basename($tmpFile), 'text/plain');
 
         $bag = new FileBag(array(
             'child' => array(
@@ -93,7 +106,7 @@ class FileBagTest extends TestCase
                     'file' => 0,
                 ),
                 'size' => array(
-                    'file' => 100,
+                    'file' => null,
                 ),
             ),
         ));
@@ -105,7 +118,7 @@ class FileBagTest extends TestCase
     public function testShouldConvertNestedUploadedFilesWithPhpBug()
     {
         $tmpFile = $this->createTempFile();
-        $file = new UploadedFile($tmpFile, basename($tmpFile), 'text/plain', 100, 0);
+        $file = new UploadedFile($tmpFile, basename($tmpFile), 'text/plain');
 
         $bag = new FileBag(array(
             'child' => array(
@@ -122,7 +135,7 @@ class FileBagTest extends TestCase
                     'sub' => array('file' => 0),
                 ),
                 'size' => array(
-                    'sub' => array('file' => 100),
+                    'sub' => array('file' => null),
                 ),
             ),
         ));
@@ -134,7 +147,7 @@ class FileBagTest extends TestCase
     public function testShouldNotConvertNestedUploadedFiles()
     {
         $tmpFile = $this->createTempFile();
-        $file = new UploadedFile($tmpFile, basename($tmpFile), 'text/plain', 100, 0);
+        $file = new UploadedFile($tmpFile, basename($tmpFile), 'text/plain');
         $bag = new FileBag(array('image' => array('file' => $file)));
 
         $files = $bag->all();
@@ -143,7 +156,10 @@ class FileBagTest extends TestCase
 
     protected function createTempFile()
     {
-        return tempnam(sys_get_temp_dir().'/form_test', 'FormTest');
+        $tempFile = tempnam(sys_get_temp_dir().'/form_test', 'FormTest');
+        file_put_contents($tempFile, '1');
+
+        return $tempFile;
     }
 
     protected function setUp()
