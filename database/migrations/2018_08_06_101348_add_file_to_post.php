@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddUrlToPosts extends Migration
+class AddFileToPost extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AddUrlToPosts extends Migration
     public function up()
     {
         Schema::table('posts', function (Blueprint $table) {
-            //
-            $table->string('url')->nullable();
+            $table->string('file')->nullable();
         });
     }
 

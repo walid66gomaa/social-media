@@ -11,6 +11,8 @@ use App\Like;
 use App\Comment;
 use App\Category;
 use DB;
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
 
 class pagesController extends Controller
 {
@@ -52,14 +54,28 @@ class pagesController extends Controller
               $post->url=$img_name;
                $request->url->move(public_path('img'),$img_name);
         }
-    	 
-        
+        if($request->hasFile('file'))
+        {
+             $filename=$request->file->getClientOriginalName();
+            //  $request->file('file')->storeAs(Auth::user()->id.'/posts/file',$filename);
+          
+             
+             $post->file=$filename;  
+        }
+     
          $post->title=request('title');
          $post->category_id=request('cat_id');
          $post->body=request('body');
        
          $post->user_id=Auth::user()->id;
          $post->save();
+
+         if($request->hasFile('file'))
+         {
+              $filename=$request->file->getClientOriginalName();
+              $request->file('file')->storeAs('public/'.Auth::user()->id.'/posts'.'/'.$post->id.'/file',$filename);
+            
+         }
 
          
           

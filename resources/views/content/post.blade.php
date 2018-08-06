@@ -38,7 +38,21 @@
                   
                       <textarea class="form-group form-control input-lg" placeholder="your post" rows="4" name="body" id="body"></textarea>
 
-                      <input type="file"  class="form-control  form-group" id="url" name="url">
+                    {{-- <input type="file"  class="form-control  form-group" id="url" name="url"  accept="image/*"> --}}
+                      <label id="#bb" title="add image"> 
+                        <input type="file"  style="display: none"  size="60" id="url" name="url"  accept="image/*" >
+                        <!-- <i class="fa fa-file" style="font-size:48px;color:red"></i> -->
+                        <i class="fa fa-file-photo-o" style="font-size:48px;"></i>
+                        </label> 
+
+                       
+                      <label id="#bb" title="add file"> 
+                        <input type="file"  style="display: none"  size="60" id="file" name="file"   accept="application/*" >
+                        <i class="fa fa-file" style="font-size:48px;"></i> 
+                        
+                        </label> 
+                        <br>
+                     
                   <input type="submit"  value="Add Post"  class="btn btn-danger input-lg  ">
                   
                     
@@ -80,6 +94,16 @@
           
            @if($post->url)
            <img class="img-fluid rounded" src="../img/{{$post->url}}" alt="" style="width: 900px;height: 300px">
+
+          @endif
+           @if($post->file)
+           <a href="/storage/{{ $post->user_id }}/posts/{{ $post->id }}/file/{{ $post->file}}" download>
+            <div>
+              <span>{{ $post->file }} </span>
+          <i class="fa fa-download" style="font-size:20px"></i>
+            </div>
+            
+            
 
           @endif
             <br>
